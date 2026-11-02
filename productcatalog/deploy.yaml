@@ -28,7 +28,7 @@ spec:
         - name: productcatalogservice
           # CHANGE IMAGE
           # image: abhishekf5/product-catalog:13134113508
-          image: tharix46/e-commerce-devops-project-product-catalog:66b27cf19a28fe747b493b89e26e6978e1f9bffa
+          image: tharix46/e-commerce-devops-project-product-catalog:3ebda3a37641ae8278a807b7473076026b4b8e37
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8088
