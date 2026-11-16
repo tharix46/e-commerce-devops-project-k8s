@@ -96,9 +96,9 @@ k get nodes
 
 k apply -f serviceaccount.yaml
 
-k apply -R -f ./
-# OR
-find . -type f \( -name '*.yaml' -o -name '*.yml' \) -exec kubectl apply -f {} \;
+k create namespace argocd
+
+find . -path './argocd-apps' -prune -o -type f -name '*.yaml' -exec kubectl apply -f {} \;
 ```
 
 ---
@@ -114,7 +114,7 @@ aws iam create-policy \
  --policy-name AWSLoadBalancerControllerIAMPolicy \
  --policy-document file://iam_policy.json
 
-# associate the IAM OIDC provider with EKS cluster
+# registers the EKS cluster’s OIDC issuer as an identity provider in AWS IAM
 eksctl utils associate-iam-oidc-provider --region=us-east-1 --cluster=e-commerce-project --approve
 
 # create an IAM service account for the AWS Load Balancer Controller
@@ -139,7 +139,7 @@ helm install aws-load-balancer-controller eks/aws-load-balancer-controller -n ku
  --set vpcId=<VPC-ID>
 
 # check if the AWS Load Balancer Controller is running
-kubectl get deployment -n kube-system aws-load-balancer-controller
+k get deployment -n kube-system aws-load-balancer-controller
 ```
 
 ---
@@ -153,7 +153,7 @@ Because there is no custom domain name for the ALB URL in this project, we need 
 ```bash
 nslookup <alb url>
 sudo vim /etc/hosts
-# add alb ip address and example.com to the file
+# add alb ip address with example.com argocd.example.com to the file
 ```
 
 ---
@@ -167,14 +167,21 @@ k apply -n argocd --server-side --force-conflicts -f https://raw.githubuserconte
 
 k get pods -n argocd
 
-# expose the ArgoCD server as a LoadBalancer service
-k edit svc argocd-server -n argocd
-# make it type LoadBalancer
-
 k get svc -n argocd
+
+k get configmap -n argocd
+
+k edit configmap argocd-cmd-params-cm -n argocd
+# data:
+#   server.insecure: "true"  # disable its built-in TLS and serve plain HTTP
+
+k rollout restart deployment argocd-server -n argocd
 
 # get the initial admin password for ArgoCD
 k get secret argocd-initial-admin-secret -n argocd -o jsonpath="{.data.password}" | base64 -d; echo
+
+# apply argocd applications
+find ./argocd-apps -type f -name '*.yaml' -exec kubectl apply -f {} \;
 ```
 
 ---
