@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: product-catalog
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/tharix46/e-commerce-devops-project-k8s
+    targetRevision: HEAD
+    path: productcatalog # the directory with deploy.yaml, svc.yaml
+  destination:
+    server: https://kubernetes.default.svc # "this cluster"
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
