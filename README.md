@@ -25,6 +25,8 @@ This repository contains **kubernetes manifests** to provision **Kubernetes reso
 ├── ad
 │   ├── deploy.yaml
 │   └── svc.yaml
+├── argocd-apps
+│   └── product-catalog-argo-app.yaml
 ├── cart
 │   ├── deploy.yaml
 │   └── svc.yaml
@@ -54,6 +56,7 @@ This repository contains **kubernetes manifests** to provision **Kubernetes reso
 ├── imageprovider
 │   ├── deploy.yaml
 │   └── svc.yaml
+├── ingress-argocd.yaml
 ├── k8s.svg
 ├── kafka
 │   ├── deploy.yaml
