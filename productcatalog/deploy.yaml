@@ -24,7 +24,7 @@ spec:
       serviceAccountName: opentelemetry-demo
       containers:
         - name: productcatalogservice
-          image: tharix46/e-commerce-devops-project-product-catalog:fa1014f3901d565492e3448009ae637be5c104dd
+          image: tharix46/e-commerce-devops-project-product-catalog:6f0f2e1
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8088
